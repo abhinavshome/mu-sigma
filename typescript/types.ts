@@ -17,5 +17,5 @@ interface Person {
 const person: Person = {
   name: "Abhinav",
   city: "Bangalore",
-  country: "India",
+  //   country: "India",//Error
 };

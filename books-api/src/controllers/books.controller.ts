@@ -1,10 +1,23 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { CreateBookDto, UpdateBookDto } from 'src/interfaces';
+import { BooksService } from 'src/services/books.service';
 
 @Controller('books')
 export class BooksController {
+  constructor(private booksService: BooksService) {}
+
   @Get()
-  getBooks() {
-    return ['The Alchemist', 'Power of Now'];
+  async getBooks() {
+    const books = await this.booksService.getBooks();
+    return books;
   }
 
   @Get('new')
@@ -13,7 +26,20 @@ export class BooksController {
   }
 
   @Post()
-  addBook(@Body() data) {
-    return data;
+  async addBook(@Body() data: CreateBookDto) {
+    const res = await this.booksService.addBook(data);
+    return `New book with id ${res} successfully created`;
+  }
+
+  @Delete(':bookId')
+  async deleteBook(@Param('bookId') id: string) {
+    const res = await this.booksService.deleteBook(parseInt(id));
+    return `${res} records deleted successfully!`;
+  }
+
+  @Put(':bookId')
+  async updateBook(@Param('bookId') id: string, @Body() data: UpdateBookDto) {
+    const res = await this.booksService.updateBook(parseInt(id), data);
+    return res;
   }
 }

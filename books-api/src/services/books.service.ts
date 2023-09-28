@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 // import Db from 'mysql2-async';
 import { Book, CreateBookDto, UpdateBookDto } from 'src/interfaces';
-import sql from 'mssql';
+import * as sql from 'mssql';
 
 @Injectable()
 export class BooksService {
@@ -11,6 +11,15 @@ export class BooksService {
       user: 'msu_user',
       password: 'Password@123',
       database: 'ContosoRetailDW',
+      pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000,
+      },
+      options: {
+        encrypt: true, // for azure
+        trustServerCertificate: true, // change to true for local dev / self-signed certs
+      },
     });
     console.log('Connected to database');
   }

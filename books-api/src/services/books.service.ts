@@ -1,35 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import Db from 'mysql2-async';
+// import Db from 'mysql2-async';
 import { Book, CreateBookDto, UpdateBookDto } from 'src/interfaces';
+import sql from 'mssql';
 
 @Injectable()
 export class BooksService {
-  private db: Db;
   constructor() {
-    this.db = new Db({
-      host: '127.0.0.1',
+    sql.connect({
+      server: '127.0.0.1',
       user: 'root',
       password: '',
       database: 'booksdb',
-      skiptzfix: true,
     });
     console.log('Connected to database');
   }
 
   async getBooks(): Promise<Book[]> {
-    const res = await this.db.getall('select * from books');
+    const res = await sql.query('select * from books');
     return res;
   }
 
   async addBook(book: CreateBookDto): Promise<number> {
-    const res = await this.db.insert(
+    const res = await sql.query(
       `insert into books (title, author, price, rating) values ('${book.title}', '${book.author}', ${book.price}, ${book.rating})`,
     );
     return res;
   }
 
   async deleteBook(bookId: number) {
-    const res = await this.db.delete(`delete from books where id = ${bookId}`);
+    const res = await sql.query(`delete from books where id = ${bookId}`);
     return res;
   }
 
@@ -40,7 +39,7 @@ export class BooksService {
       .join(', ');
     query += ` where id = ${bookId}`;
     console.log(query);
-    const res = await this.db.update(query);
+    const res = await sql.query(query);
     return res;
   }
 }

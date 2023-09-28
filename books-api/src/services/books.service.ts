@@ -7,10 +7,10 @@ import sql from 'mssql';
 export class BooksService {
   constructor() {
     sql.connect({
-      server: '127.0.0.1',
-      user: 'root',
-      password: '',
-      database: 'booksdb',
+      server: 'INBAAVVMMSUSQL',
+      user: 'msu_user',
+      password: 'Password@123',
+      database: 'ContosoRetailDW',
     });
     console.log('Connected to database');
   }

@@ -1,0 +1,33 @@
+{
+  "local": {
+    "server": "localhost",
+    "port": 57000,
+    "user": "SA",
+    "password": "Str#ng_Passw#rd",
+    "database": "booksdb",
+    "pool": {
+      "max": 10,
+      "min": 0,
+      "idleTimeoutMillis": 30000
+    },
+    "options": {
+      "encrypt": true,
+      "trustServerCertificate": true
+    }
+  },
+  "musigma": {
+    "server": "INBAAVVMMSUSQL",
+    "user": "msu_user",
+    "password": "Password@123",
+    "database": "ContosoRetailDW",
+    "pool": {
+      "max": 10,
+      "min": 0,
+      "idleTimeoutMillis": 30000
+    },
+    "options": {
+      "encrypt": true,
+      "trustServerCertificate": true
+    }
+  }
+}

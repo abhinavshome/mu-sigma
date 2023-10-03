@@ -1,48 +1,35 @@
 import { Injectable } from '@nestjs/common';
 // import Db from 'mysql2-async';
-import { Book, CreateBookDto, UpdateBookDto } from 'src/interfaces';
+import { CreateBookDto, UpdateBookDto } from 'src/interfaces';
 import * as sql from 'mssql';
+import dbConfig from '../config.json';
 
 @Injectable()
 export class BooksService {
   constructor() {
-    sql.connect({
-      server: 'INBAAVVMMSUSQL',
-      user: 'msu_user',
-      password: 'Password@123',
-      database: 'ContosoRetailDW',
-      pool: {
-        max: 10,
-        min: 0,
-        idleTimeoutMillis: 30000,
-      },
-      options: {
-        encrypt: true, // for azure
-        trustServerCertificate: true, // change to true for local dev / self-signed certs
-      },
-    });
+    sql.connect(dbConfig.musigma);
     console.log('Connected to database');
   }
 
-  async getBooks(): Promise<Book[]> {
-    const res = await sql.query('select * from books');
+  async getBooks(): Promise<any> {
+    const res = await sql.query('select * from book');
     return res;
   }
 
-  async addBook(book: CreateBookDto): Promise<number> {
+  async addBook(book: CreateBookDto): Promise<any> {
     const res = await sql.query(
-      `insert into books (title, author, price, rating) values ('${book.title}', '${book.author}', ${book.price}, ${book.rating})`,
+      `insert into book (title, author, price, rating) values ('${book.title}', '${book.author}', ${book.price}, ${book.rating})`,
     );
     return res;
   }
 
   async deleteBook(bookId: number) {
-    const res = await sql.query(`delete from books where id = ${bookId}`);
+    const res = await sql.query(`delete from book where id = ${bookId}`);
     return res;
   }
 
   async updateBook(bookId: number, book: UpdateBookDto) {
-    let query = 'update books set ';
+    let query = 'update book set ';
     query += Object.keys(book)
       .map((key) => `${key} = ${book[key]}`)
       .join(', ');

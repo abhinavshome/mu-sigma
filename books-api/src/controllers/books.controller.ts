@@ -25,6 +25,14 @@ export class BooksController {
     return { newBooks: ['The new earth', 'The monk who sold his ferrari'] };
   }
 
+  @Post('new')
+  testPostNew(@Body() body) {
+    return {
+      message: 'Post working fine',
+      body: body,
+    };
+  }
+
   @Post()
   async addBook(@Body() data: CreateBookDto) {
     const res = await this.booksService.addBook(data);
@@ -34,7 +42,7 @@ export class BooksController {
   @Delete(':bookId')
   async deleteBook(@Param('bookId') id: string) {
     const res = await this.booksService.deleteBook(parseInt(id));
-    return `${res} records deleted successfully!`;
+    return res;
   }
 
   @Put(':bookId')

@@ -50,4 +50,16 @@ export class BooksController {
     const res = await this.booksService.updateBook(parseInt(id), data);
     return res;
   }
+
+  @Get('topRated')
+  async topRated() {
+    const res = await this.booksService.getTopRatedBooks();
+    return res;
+  }
+
+  @Get('maxPrice/:price')
+  async maxPrice(@Param('price') amount) {
+    const res = await this.booksService.getBookWithPriceLessThan(amount);
+    return res;
+  }
 }

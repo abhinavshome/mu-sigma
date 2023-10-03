@@ -1,30 +1,26 @@
 import { Injectable } from '@nestjs/common';
 // import Db from 'mysql2-async';
 import { CreateBookDto, UpdateBookDto } from 'src/interfaces';
-import * as sql from 'mssql';
-import dbConfig from '../config.json';
+import { DbService } from './db.service';
 
 @Injectable()
 export class BooksService {
-  constructor() {
-    sql.connect(dbConfig.musigma);
-    console.log('Connected to database');
-  }
+  constructor(private db: DbService) {}
 
   async getBooks(): Promise<any> {
-    const res = await sql.query('select * from book');
+    const res = await this.db.runQuery('select * from book');
     return res;
   }
 
   async addBook(book: CreateBookDto): Promise<any> {
-    const res = await sql.query(
+    const res = await this.db.runQuery(
       `insert into book (title, author, price, rating) values ('${book.title}', '${book.author}', ${book.price}, ${book.rating})`,
     );
     return res;
   }
 
   async deleteBook(bookId: number) {
-    const res = await sql.query(`delete from book where id = ${bookId}`);
+    const res = await this.db.runQuery(`delete from book where id = ${bookId}`);
     return res;
   }
 
@@ -35,7 +31,25 @@ export class BooksService {
       .join(', ');
     query += ` where id = ${bookId}`;
     console.log(query);
-    const res = await sql.query(query);
+    const res = await this.db.runQuery(query);
     return res;
+  }
+
+  async getTopRatedBooks() {
+    const res = await this.db.runQuery('select * from book where rating = 5');
+    return res;
+  }
+
+  async getBookWithPriceLessThan(price: number) {
+    const res = await this.db.runQuery(
+      `select * from book where price < ${price}`,
+    );
+    return res;
+  }
+
+  async findBooksWithAuthorLike(authorName: string) {
+    return await this.db.runQuery(
+      `select * from book where author like '%${authorName}%'`,
+    );
   }
 }

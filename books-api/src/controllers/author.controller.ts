@@ -7,6 +7,7 @@ export class AuthorController {
 
   @Get('like/:name')
   async authorLike(@Param('name') authorName: string) {
+    console.log('in author controller');
     return await this.bookService.findBooksWithAuthorLike(authorName);
   }
 }

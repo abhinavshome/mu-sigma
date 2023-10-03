@@ -4,10 +4,12 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { CreateBookDto, UpdateBookDto } from 'src/interfaces';
+import { BookDtopValidationPipe } from 'src/pipes/bookDtoValidaton.pipe';
 import { BooksService } from 'src/services/books.service';
 
 @Controller('books')
@@ -34,7 +36,7 @@ export class BooksController {
   }
 
   @Post()
-  async addBook(@Body() data: CreateBookDto) {
+  async addBook(@Body(BookDtopValidationPipe) data: CreateBookDto) {
     const res = await this.booksService.addBook(data);
     return `New book with id ${res} successfully created`;
   }
@@ -46,8 +48,11 @@ export class BooksController {
   }
 
   @Put(':bookId')
-  async updateBook(@Param('bookId') id: string, @Body() data: UpdateBookDto) {
-    const res = await this.booksService.updateBook(parseInt(id), data);
+  async updateBook(
+    @Param('bookId', ParseIntPipe) id: number,
+    @Body() data: UpdateBookDto,
+  ) {
+    const res = await this.booksService.updateBook(id, data);
     return res;
   }
 
